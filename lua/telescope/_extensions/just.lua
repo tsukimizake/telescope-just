@@ -23,7 +23,7 @@ local function get_recipes()
     local name, description = line:match("^(.-)#(.*)$")
     name = name:gsub("^%s*(.-)%s*$", "%1")
     name = name:gsub(" .*", "")
-    if (name ~= nil or name ~= "") and description ~= nil then
+    if name ~= nil and name ~= "" and description ~= nil then
       recipes[name] = {name = name, description = description}
     end
   end
