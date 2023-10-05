@@ -2,7 +2,7 @@
 
 local parser = require 'telescope-just.parser'
 
-describe("some basics", function()
+describe("telescope-just.parser", function()
   it("test # this is a test", function ()
     name, desc = parser.parse_line("test # this is a test")
     assert.equals("test", name)
