@@ -4,28 +4,13 @@ local pickers = require("telescope.pickers")
 local action_state = require("telescope.actions.state")
 
 local conf = require("telescope.config").values
+local parser = require("telescope-just.parser")
 
 
 local function action(recipe)
   vim.cmd("!just " .. recipe.name)
 end
 
-local function trim(s)
-  return s:gsub("^%s*(.-)%s*$", "%1")
-end
-
-local function parse_line(line)
-  local name, description = line:match("^(.-)#(.*)$")
-  if name == nil and line ~= nil then
-    -- if there is no description, just return as is
-    line = trim(line) or line
-    line = line:gsub(" .*", "") or line
-    return line, "no desc"
-  end
-  name = trim(name) or name
-  name = name:gsub(" .*", "") or name
-  return name, trim(description)
-end
 
 local function get_recipes()
   local recipes = {}
@@ -37,7 +22,7 @@ local function get_recipes()
   end
 
   for line in handle:lines() do
-    local name, description = parse_line(line)
+    local name, description = parser.parse_line(line)
     if name ~= nil and description ~= nil then
       recipes[name] = {name = name, description = description}
     end
