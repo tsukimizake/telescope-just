@@ -10,6 +10,23 @@ local function action(recipe)
   vim.cmd("!just " .. recipe.name)
 end
 
+local function trim(s)
+  return s:gsub("^%s*(.-)%s*$", "%1")
+end
+
+local function parse_line(line)
+  local name, description = line:match("^(.-)#(.*)$")
+  if name == nil and line ~= nil then
+    -- if there is no description, just return as is
+    line = trim(line)
+    line = line:gsub(" .*", "")
+    return line, "no desc"
+  end
+  name = trim(name)
+  name = name:gsub(" .*", "")
+  return name, trim(description)
+end
+
 local function get_recipes()
   local recipes = {}
   local handle = io.popen("just --list --list-heading ''")
@@ -20,10 +37,8 @@ local function get_recipes()
   end
 
   for line in handle:lines() do
-    local name, description = line:match("^(.-)#(.*)$")
-    name = name:gsub("^%s*(.-)%s*$", "%1")
-    name = name:gsub(" .*", "")
-    if name ~= nil and name ~= "" and description ~= nil then
+    local name, description = parse_line(line)
+    if name ~= nil and description ~= nil then
       recipes[name] = {name = name, description = description}
     end
   end
