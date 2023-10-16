@@ -39,7 +39,7 @@ local function search(opts)
     table.insert(results, {
       value = recipe,
       ordinal = name,
-      display = name,
+      display = name .. "    " .. recipe.description,
     })
   end
 
